@@ -4,6 +4,7 @@
 - LV0 Budget 설정 완료
 - LV1 로컬 Member API 구현 완료
 - LV1 EC2 배포 및 Health Check 완료
+- LV2 RDS & Parameter Store 연동 완료
 
 ## LV0 Budget
 - 월 예산: $100
@@ -24,3 +25,46 @@
 - 상태: UP
 
 ![EC2 Health Check 결과](docs/images/health-check.png)
+
+## LV2 RDS & Parameter Store
+
+- Actuator Info URL: http://54.180.133.6:8080/actuator/info
+- Parameter Store 확인 값: `{"team-name":"yejin-team"}`
+- RDS Inbound Source: EC2 Security Group (`ch4-ec2-sg`)
+
+![RDS Security Group](docs/images/rds-security-group.png)# CH4 AWS Cloud Assignment
+
+## 진행 단계
+- LV0 Budget 설정 완료
+- LV1 로컬 Member API 구현 완료
+- LV1 EC2 배포 및 Health Check 완료
+
+## LV0 Budget
+- 월 예산: $100
+- 알림 기준: 80%
+
+![AWS Budget 설정 화면](docs/images/budgets.png)
+
+## LV1 Local API
+- POST /api/members
+- GET /api/members/{id}
+- GET /actuator/health
+- local profile: H2
+- prod profile: MySQL
+
+## LV1 EC2 배포
+- EC2 Public IP: 54.180.133.6
+- Health Check URL: http://54.180.133.6:8080/actuator/health
+- 상태: UP
+
+![EC2 Health Check 결과](docs/images/health-check.png)
+
+## LV2 RDS & Parameter Store
+
+- RDS: MySQL
+- Parameter Store: DB 접속 정보 및 team-name 저장
+- Actuator Info URL: http://54.180.133.6:8080/actuator/info
+- Parameter Store 확인 값: `{"team-name":"yejin-team"}`
+- RDS Inbound Source: EC2 Security Group (`ch4-ec2-sg`)
+
+![RDS Security Group](docs/images/rds-security-group.png)
