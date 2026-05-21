@@ -3,6 +3,7 @@
 ## 진행 단계
 - LV0 Budget 설정 완료
 - LV1 로컬 Member API 구현 완료
+- LV1 EC2 배포 및 Health Check 완료
 
 ## LV0 Budget
 - 월 예산: $100
@@ -16,7 +17,10 @@
 - GET /actuator/health
 - local profile: H2
 - prod profile: MySQL
+
 ## LV1 EC2 배포
 - EC2 Public IP: 54.180.133.6
 - Health Check URL: http://54.180.133.6:8080/actuator/health
 - 상태: UP
+
+![EC2 Health Check 결과](docs/images/health-check.png)
