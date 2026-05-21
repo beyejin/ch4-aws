@@ -1,11 +1,11 @@
 spring:
-application:
-name: ch4
-profiles:
-active: local
+  application:
+    name: ch4
+  profiles:
+    active: local
 
 management:
-endpoints:
-web:
-exposure:
-include: health,info
+  endpoints:
+    web:
+      exposure:
+        include: health,info

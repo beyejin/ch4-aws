@@ -1,11 +1,24 @@
 spring:
+  config:
+    import: aws-parameterstore:/ch4/prod/
   datasource:
-    url: ${DB_URL}
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
+    url: ${db-url}
+    username: ${db-username}
+    password: ${db-password}
     driver-class-name: com.mysql.cj.jdbc.Driver
-
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     show-sql: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  info:
+    env:
+      enabled: true
+
+info:
+  team-name: ${team-name}
