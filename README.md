@@ -16,3 +16,7 @@
 - GET /actuator/health
 - local profile: H2
 - prod profile: MySQL
+## LV1 EC2 배포
+- EC2 Public IP: 54.180.133.6
+- Health Check URL: http://54.180.133.6:8080/actuator/health
+- 상태: UP
