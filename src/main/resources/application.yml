@@ -9,3 +9,8 @@ management:
     web:
       exposure:
         include: health,info
+
+cloud:
+  aws:
+    s3:
+      bucket: ch4-yejin-profile-files
