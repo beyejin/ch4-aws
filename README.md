@@ -116,6 +116,6 @@ Presigned URL 7일 만료 설정
 - EC2 Docker Container: Running
 - Health Check URL: http://54.180.133.6:8080/actuator/health
 
-![GitHub Actions 성공 화면](docs/images/github-actions-success.png)
+![GitHub Actions 성공 화면](./docs/images/github-actions-success.png)
 
 ![EC2 Docker ps 결과](docs/images/docker-ps.png)
