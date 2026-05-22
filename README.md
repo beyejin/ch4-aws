@@ -108,11 +108,14 @@ RDS 보안 그룹 체이닝
 Access Key 없이 IAM Role로 S3 접근
 Presigned URL 7일 만료 설정
 
-## LV4 Docker
+## LV4 Docker & CI/CD
 
 - Docker Image: `hanyejin/ch4-aws:latest`
 - Docker Hub: https://hub.docker.com/r/hanyejin/ch4-aws
+- GitHub Actions: Build, Docker Push, EC2 Deploy 자동화
 - EC2 Docker Container: Running
 - Health Check URL: http://54.180.133.6:8080/actuator/health
+
+![GitHub Actions 성공 화면](docs/images/github-actions-success.png)
 
 ![EC2 Docker ps 결과](docs/images/docker-ps.png)
