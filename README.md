@@ -11,6 +11,7 @@ Spring Boot 기반 팀원 소개 API를 AWS에 배포하고, RDS, Parameter Stor
 - LV3 S3 프로필 이미지 업로드 및 Presigned URL 발급 완료
 - LV4 Docker & CI/CD 자동화 완료
 - LV5 ALB + ASG + HTTPS + Domain 연결 완료
+- LV6 CloudFront 기반 프로필 이미지 제공 완료
 
 ---
 
@@ -289,12 +290,9 @@ Image URL Response: CloudFront URL 반환
 CloudFront URL 접속 시 S3에 저장된 이미지 정상 조회
 
 CloudFront URL Example:
-https://d1rt3b9hert9ls.cloudfront.net/members/1/profile-....jpeg
+https://d1rt3b9hert9ls.cloudfront.net/members/1/profile-6f0cf007-6fc1-465b-9292-1c11f003129d.jpeg
 
-```md
-- AWS CloudFront
-
-
+![CloudFront Image Access](docs/images/cloudfront-image-access.png)
 
 ## 기술 스택
 
@@ -307,6 +305,7 @@ https://d1rt3b9hert9ls.cloudfront.net/members/1/profile-....jpeg
 - AWS RDS
 - AWS Systems Manager Parameter Store
 - AWS S3
+- AWS CloudFront
 - AWS IAM Role
 - AWS ALB
 - AWS Auto Scaling
