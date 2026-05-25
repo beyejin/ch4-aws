@@ -9,13 +9,19 @@ Spring Boot 기반 팀원 소개 API를 AWS에 배포하고, RDS, Parameter Stor
 - LV1 EC2 배포 및 Health Check 완료
 - LV2 RDS & Parameter Store 연동 완료
 - LV3 S3 프로필 이미지 업로드 및 Presigned URL 발급 완료
+- LV4 Docker & CI/CD 자동화 완료
+- LV5 ALB + ASG + HTTPS + Domain 연결 완료
+
+---
 
 ## LV0 Budget
 
-- 월 예산: $100
-- 알림 기준: 80%
+- 월 예산: `$100`
+- 알림 기준: `80%`
 
 ![AWS Budget 설정 화면](docs/images/budgets.png)
+
+---
 
 ## LV1 Member API & EC2 배포
 
@@ -26,8 +32,8 @@ Spring Boot 기반 팀원 소개 API를 AWS에 배포하고, RDS, Parameter Stor
 
 ### 운영 설정
 
-- local profile: H2
-- prod profile: MySQL
+- local profile: `H2`
+- prod profile: `MySQL`
 - Actuator health endpoint 노출
 - API 요청 INFO 로그 기록
 - 예외 발생 시 ERROR 로그 기록
@@ -35,34 +41,38 @@ Spring Boot 기반 팀원 소개 API를 AWS에 배포하고, RDS, Parameter Stor
 ### EC2 배포 검증
 
 - EC2 Public IP: `54.180.133.6`
-- Health Check URL: http://54.180.133.6:8080/actuator/health
+- Health Check URL: [http://54.180.133.6:8080/actuator/health](http://54.180.133.6:8080/actuator/health)
 - 상태: `UP`
 
 ![EC2 Health Check 결과](docs/images/health-check.png)
+
+---
 
 ## LV2 RDS & Parameter Store
 
 ### 구성 내용
 
-- RDS: MySQL
+- RDS: `MySQL`
 - Parameter Store: DB 접속 정보 및 `team-name` 저장
 - Spring Boot prod profile에서 Parameter Store 값 주입
 - RDS 보안 그룹 Inbound Source를 EC2 Security Group으로 제한
 
 ### 검증 결과
 
-- Actuator Info URL: http://54.180.133.6:8080/actuator/info
+- Actuator Info URL: [http://54.180.133.6:8080/actuator/info](http://54.180.133.6:8080/actuator/info)
 - Parameter Store 확인 값: `{"team-name":"yejin-team"}`
 - RDS Inbound Source: EC2 Security Group (`ch4-ec2-sg`)
 
 ![RDS Security Group](docs/images/rds-security-group.png)
+
+---
 
 ## LV3 S3 Profile Image
 
 ### 구성 내용
 
 - S3 Bucket: `ch4-yejin-profile-files`
-- Public Access Block: Enabled
+- Public Access Block: `Enabled`
 - EC2 IAM Role: `ch4-ec2-s3-role`
 - Access Key 없이 IAM Role 기반으로 S3 접근
 - DB에는 S3 Object Key 저장
@@ -70,31 +80,42 @@ Spring Boot 기반 팀원 소개 API를 AWS에 배포하고, RDS, Parameter Stor
 
 ### 구현 API
 
-- Upload API: `POST http://54.180.133.6:8080/api/members/{id}/profile-image`
-- Presigned URL API: `GET http://54.180.133.6:8080/api/members/{id}/profile-image`
+- Upload API: `POST /api/members/{id}/profile-image`
+- Presigned URL API: `GET /api/members/{id}/profile-image`
 
 ### Presigned URL 검증
 
-- Presigned URL Expiration: 7 days
+- Presigned URL Expiration: `7 days`
 - `X-Amz-Expires=604800` 확인
 - Presigned URL expires at: `2026-05-29`
 
-Presigned URL:
+Presigned URL Example:
 
-```text
-https://ch4-yejin-profile-files.s3.ap-northeast-2.amazonaws.com/members/1/profile-6f0cf007-6fc1-465b-9292-1c11f003129d.jpeg?X-Amz-Security-Token=IQoJb3JpZ2luX2VjEE0aDmFwLW5vcnRoZWFzdC0yIkcwRQIgW9T0KGYZzmdaD1mRoMSGwLC%2Bf4ue3pdQpJDPnKJkNC4CIQD2zSKRdMjN8%2FJ0W3bob%2BobAKGNt7FvlQ1hR6S6beOcwCrIBQgWEAAaDDQyMDU1MTI1OTU1NiIMldejKUZJVAbT6AY9KqUFcW9CCr2BBtmmD5jrem1z4QPZiPLZjZF2AIkpC7L6QQv07WurerUSpQFlm6y6cjyvlCwv51WukIUbauNDrZru2jnw30iFKKabhzmvFTG9%2BAxp4s87tv1mF9oDQ74mH4PgzAdXPkSogqz1iPowZnl3kP0CH59JdyvlXXTbi84OAkvu1Wka6M3E1thmzhqNQvNdZBqgbFCGon7ZRe8%2FUIFPs3X8v9%2BgOZksw9PpHa7hB9CE9%2B5sfh314WkdDEHaiWFgB1PuNuHXNMPUfmk%2BNDV3ah2mKrSdZ1g4ZM53Bn2aPCQpui7jZdKdjHmMl5ZQRUIJksMmPkT19kAoykeREivnXmcRFal5JfYQlUzGR5VZ13ti23w9H8sGPKYk6ILxJlWDC8ov8RZWxhcpay2dtCgccxbJnNdEsO9yM3PkifMRJXKVSIKOTlBKRl%2FD7PqJw9dr6p2CiyebWCOWIH3Jl12BJbp03WrIeQrxP%2FK2LTe6T%2FaAImzA0MUO7nGYcNcwCxF1QCSDhoHbd9pe0Pzru%2BG8FJzFXzkvr2exKUtKLbqar0xCXl40kp65uon9ZyCZ7tKeZPCNX1KwD210rCF3D7KZpIO20DGVQmNTU3BdUN4U2LRUXW4ANtXR7DxF0jFehlBX9UnCiXsP7PKwWjjDes7Nb%2Fx0v5bom%2FxAYToTqZagx5rD4MNYR81RsHKESh4v3S2o%2FiS0oYvjvOj68MXSzul81xHyrIUOIME11dndaFUzUUYzjiosBjffLv147YXs7zmC5KdYwHHw2aef8y2VwlRiI7YUBfFvjhfU7VaF46RaxVypckN5uDu7WT3iXjRrcNsAgDKKiRcDq8EeCsGp3Ww38fYFFTrpYfJQewXPXFmqQM6TGRbCZMgZr3DT%2FEr%2FtggS5DwTdGMwsMq%2F0AY6sQFtKm6r8yO8UtZn6w1jYO3%2BSsF5av4FFDadgxDYHaRbN%2F%2BGgSvJcHAHAa7ycrfOb3sWT9j9Gej03PbCYQYKXpk2dMHeuFmiHyEo8GWeWmzKkGoVZovouU8VYaqmU5Kt6js27k6uN8Ubx%2F790O8w7CIOSiXSF4snxwFb8LRo4%2FajynEHzMg4QcZ7ucK4ALHZq4gj2uVMQYBRTX2pawu%2BsmEizU6P0XdNLzwAx0N%2BdHZZzk4%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20260522T061229Z&X-Amz-SignedHeaders=host&X-Amz-Credential=ASIAWD2WO6WSJXEYRR74%2F20260522%2Fap-northeast-2%2Fs3%2Faws4_request&X-Amz-Expires=604800&X-Amz-Signature=49a378145d9ec4affc7179d1cc00783c26d9263b197c1e4e73a72dd3b45327fe
-```
+~~~text
+https://ch4-yejin-profile-files.s3.ap-northeast-2.amazonaws.com/members/1/profile-....jpeg?X-Amz-Expires=604800&...
+~~~
+
+![Presigned URL Response](docs/images/s3-presigned-url-response.png)
+![Presigned URL Access](docs/images/s3-presigned-url-access.png)
+
+---
 
 ## LV4 Docker & CI/CD
 
+### 구성 내용
+
 - Docker Image: `hanyejin/ch4-aws:latest`
-- Docker Hub: https://hub.docker.com/r/hanyejin/ch4-aws
-- GitHub Actions: Build, Docker Push, EC2 Deploy 자동화
-- EC2 Docker Container: Running
-- Health Check URL: http://54.180.133.6:8080/actuator/health
+- Docker Hub: [https://hub.docker.com/r/hanyejin/ch4-aws](https://hub.docker.com/r/hanyejin/ch4-aws)
+- GitHub Actions를 통해 Build, Docker Push, EC2 Deploy 자동화
+- EC2에서 Docker Container 실행 확인
 
-![GitHub Actions 성공 화면](./docs/images/github-actions-success.png)
+### 검증 결과
 
+- Health Check URL: [http://54.180.133.6:8080/actuator/health](http://54.180.133.6:8080/actuator/health)
+- GitHub Actions 배포 성공
+- EC2 `docker ps` 실행 결과 정상
+
+![GitHub Actions 성공 화면](docs/images/github-actions-success.png)
 ![EC2 Docker ps 결과](docs/images/docker-ps.png)
 
 ### CI/CD 트러블슈팅
@@ -160,6 +181,71 @@ ssh: handshake failed: ssh: unable to authenticate
 - 끝에 불필요한 문자나 공백이 들어가지 않았는지 확인
 - `EC2_USER`가 AMI에 맞는 사용자명인지 확인
 
+#### 4. ARM 인스턴스와 Docker 이미지 아키텍처 불일치
+
+Private EC2가 `t4g.small (ARM64)` 인스턴스로 생성되었는데, GitHub Actions에서 빌드한 Docker 이미지가 다른 아키텍처 기준으로 올라가면서 Target Group이 계속 `Unhealthy` 상태가 되었습니다.
+
+확인 방법:
+
+- SSM Session Manager로 Private EC2 접속
+- `docker ps -a`
+- `docker logs ch4-app`
+
+실제 에러:
+
+```text
+exec /opt/java/openjdk/bin/java: exec format error
+```
+
+해결 방법:
+
+- GitHub Actions Docker build를 `linux/arm64` 기준으로 수정
+- ARM64 이미지 재배포 후 Auto Scaling Group이 새 인스턴스를 생성
+- Target Group 상태가 `Healthy`로 전환됨
+
+#### 5. GitHub Actions OIDC 권한 설정 오류
+
+Repository Variables로 전환한 뒤, GitHub Actions에서 아래 오류가 발생했습니다.
+
+```text
+Could not assume role with OIDC: Not authorized to perform sts:AssumeRoleWithWebIdentity
+```
+
+원인은 GitHub Actions가 Assume할 OIDC 전용 IAM Role의 신뢰 정책이 제대로 연결되지 않았기 때문이었습니다.
+
+해결 방법:
+
+- GitHub OIDC용 IAM Role 생성
+- `token.actions.githubusercontent.com` provider 연결
+- GitHub organization / repository / branch(`main`) 조건 설정
+- 해당 Role ARN을 `AWS_ROLE_ARN` 변수에 등록
+
+---
+
+## LV5 ALB + ASG + HTTPS + Domain
+
+### 구성 내용
+
+- NAT Gateway 생성 후 Private Subnet 라우팅을 NAT Gateway로 연결
+- Private EC2를 위한 Launch Template 생성
+- Auto Scaling Group 생성
+- Application Load Balancer(ALB) 생성
+- Target Group 생성 및 `/actuator/health` 기준으로 헬스 체크 설정
+- Route 53 도메인 연결
+- ACM 인증서 적용
+- HTTP 요청이 HTTPS로 리다이렉트되도록 리스너 설정
+
+### 배포 결과
+
+- HTTPS Domain URL: [https://api.hanyejin.click](https://api.hanyejin.click)
+- Health Check URL: [https://api.hanyejin.click/actuator/health](https://api.hanyejin.click/actuator/health)
+- HTTP Redirect 확인: `http://api.hanyejin.click` 접속 시 HTTPS로 자동 전환
+
+![Target Group Healthy](docs/images/target-group-healthy.png)
+![HTTPS Domain Health Check](docs/images/https-domain-health.png)
+
+---
+
 ## 기술 스택
 
 - Java 17
@@ -172,21 +258,31 @@ ssh: handshake failed: ssh: unable to authenticate
 - AWS Systems Manager Parameter Store
 - AWS S3
 - AWS IAM Role
+- AWS ALB
+- AWS Auto Scaling
+- AWS Route 53
+- AWS ACM
 - Docker
 - Docker Hub
 - GitHub Actions
 - Gradle
 
+---
+
 ## 제출 정보
 
-- GitHub Repository: https://github.com/beyejin/ch4-aws
-- 구현 단계: LV4 완료
-- 주요 고민:
-  - Spring Boot 4에서 H2 Console 의존성 분리
-  - local/test/prod profile 분리
-  - Parameter Store를 통한 민감 정보 분리
-  - RDS 보안 그룹 체이닝
-  - Access Key 없이 IAM Role로 S3 접근
-  - Presigned URL 7일 만료 설정
-  - GitHub Actions 기반 Docker build/push/deploy 자동화
-  - CI 환경에서 외부 AWS 의존성을 제거한 테스트 구성
+- GitHub Repository: [https://github.com/beyejin/ch4-aws](https://github.com/beyejin/ch4-aws)
+- 구현 단계: `LV5 완료`
+
+### 주요 고민
+
+- Spring Boot 4에서 H2 Console 의존성 분리
+- local / test / prod profile 분리
+- Parameter Store를 통한 민감 정보 분리
+- RDS 보안 그룹 체이닝
+- Access Key 없이 IAM Role로 S3 접근
+- Presigned URL 7일 만료 설정
+- GitHub Actions 기반 Docker build / push / deploy 자동화
+- CI 환경에서 외부 AWS 의존성을 제거한 테스트 구성
+- ARM64 인스턴스와 Docker 이미지 아키텍처 맞추기
+- ALB + ASG + HTTPS + Route 53 기반의 고가용성 구조 구성
