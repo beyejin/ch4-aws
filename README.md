@@ -246,6 +246,56 @@ Could not assume role with OIDC: Not authorized to perform sts:AssumeRoleWithWeb
 
 ---
 
+## LV6 CloudFront Image Delivery
+
+### 구성 내용
+
+- S3 Bucket: `ch4-yejin-profile-files`
+- CloudFront Distribution 생성
+- CloudFront Domain: `d1rt3b9hert9ls.cloudfront.net`
+- S3에 저장된 프로필 이미지를 CloudFront를 통해 제공
+- Spring Boot 설정 파일에 CloudFront 도메인 추가
+- 이미지 업로드 후 S3 Object Key 기반 CloudFront URL 생성
+- S3 직접 접근 대신 CloudFront URL을 통해 이미지 접근 가능하도록 구성
+
+### 설정 내용
+
+`application.yml`에 CloudFront 도메인 설정을 추가했습니다.
+
+```yml
+cloud:
+  aws:
+    s3:
+      bucket: ch4-yejin-profile-files
+    cloudfront:
+      domain: d1rt3b9hert9ls.cloudfront.net
+```
+구현 내용
+S3ImageService에서 업로드된 이미지의 S3 Object Key를 생성한 뒤, CloudFront 도메인을 조합하여 이미지 접근 URL을 반환하도록 구현했습니다.
+private String createCloudFrontUrl(String key) {
+    return "https://" + cloudFrontDomain + "/" + key;
+}
+
+구현 API
+Upload API: POST /api/members/{id}/profile-image
+
+Image URL Response: CloudFront URL 반환
+
+검증 결과
+프로필 이미지 업로드 성공
+
+반환 URL이 CloudFront 도메인 기반으로 생성됨
+
+CloudFront URL 접속 시 S3에 저장된 이미지 정상 조회
+
+CloudFront URL Example:
+https://d1rt3b9hert9ls.cloudfront.net/members/1/profile-....jpeg
+
+```md
+- AWS CloudFront
+
+
+
 ## 기술 스택
 
 - Java 17
@@ -272,7 +322,7 @@ Could not assume role with OIDC: Not authorized to perform sts:AssumeRoleWithWeb
 ## 제출 정보
 
 - GitHub Repository: [https://github.com/beyejin/ch4-aws](https://github.com/beyejin/ch4-aws)
-- 구현 단계: `LV5 완료`
+- 구현 단계: `LV6 완료`
 
 ### 주요 고민
 
@@ -286,3 +336,4 @@ Could not assume role with OIDC: Not authorized to perform sts:AssumeRoleWithWeb
 - CI 환경에서 외부 AWS 의존성을 제거한 테스트 구성
 - ARM64 인스턴스와 Docker 이미지 아키텍처 맞추기
 - ALB + ASG + HTTPS + Route 53 기반의 고가용성 구조 구성
+- CloudFront 도메인을 활용한 S3 이미지 제공 구조 구성
