@@ -14,3 +14,6 @@ cloud:
   aws:
     s3:
       bucket: ch4-yejin-profile-files
+    cloudfront:
+      domain: d1rt3b9hert9ls.cloudfront.net
+

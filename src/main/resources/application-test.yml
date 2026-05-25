@@ -22,3 +22,5 @@ cloud:
   aws:
     s3:
       bucket: test-bucket
+    cloudfront:
+      domain: test-cloudfront.net  # 추가 (테스트용 더미값)

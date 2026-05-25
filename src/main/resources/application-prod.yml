@@ -22,3 +22,8 @@ management:
 
 info:
   team-name: ${team-name}
+
+cloud:
+  aws:
+    cloudfront:
+      domain: ${cloudfront-domain}
