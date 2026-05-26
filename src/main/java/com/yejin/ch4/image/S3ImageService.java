@@ -69,6 +69,6 @@ public class S3ImageService {
     }
 
     public String generatePresignedUrl(String key) {
-        return createCloudFrontUrl(key);
+        return key;
     }
 }
