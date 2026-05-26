@@ -69,18 +69,6 @@ public class S3ImageService {
     }
 
     public String generatePresignedUrl(String key) {
-        GetObjectRequest getObjectRequest = GetObjectRequest.builder()
-                .bucket(bucket)
-                .key(key)
-                .build();
-
-        GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder()
-                .signatureDuration(Duration.ofDays(7))
-                .getObjectRequest(getObjectRequest)
-                .build();
-
-        PresignedGetObjectRequest presignedRequest = s3Presigner.presignGetObject(presignRequest);
-
-        return presignedRequest.url().toString();
+        return createCloudFrontUrl(key);
     }
 }
