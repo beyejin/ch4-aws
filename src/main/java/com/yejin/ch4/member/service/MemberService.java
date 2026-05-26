@@ -42,6 +42,7 @@ public class MemberService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException(memberId));
 
+        // 업로드가 끝나면 이후 조회 API가 재사용할 CloudFront URL을 멤버에 반영한다.
         String profileImageKey = s3ImageService.uploadProfileImage(memberId, file);
         member.updateProfileImageKey(profileImageKey);
     }
@@ -51,6 +52,8 @@ public class MemberService {
         Member member = memberRepository.findById(memberId)
                 .orElseThrow(() -> new MemberNotFoundException(memberId));
 
+        // 업로드 이력이 없는 멤버는 조회용 URL을 만들 수 없으므로 먼저 차단한다.
+        // 업로드 이력이 없는 멤버는 조회용 이미지 URL을 만들 수 없다.
         if (member.getProfileImageKey() == null) {
             throw new IllegalStateException("등록된 프로필 이미지가 없습니다.");
         }

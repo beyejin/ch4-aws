@@ -5,14 +5,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
-import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
-import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequest;
 
 import java.io.IOException;
-import java.time.Duration;
 import java.util.UUID;
 
 @Service
@@ -51,12 +47,16 @@ public class S3ImageService {
             throw new IllegalStateException("프로필 이미지 업로드에 실패했습니다.", e);
         }
 
+        // 업로드 직후 바로 조회할 수 있도록 CloudFront 전달 URL을 함께 반환한다.
+        // 업로드 직후 바로 조회에 쓸 수 있도록 CloudFront 경로를 반환한다.
         return createCloudFrontUrl(key);
     }
 
     private String createProfileImageKey(Long memberId, String originalFilename) {
+        // 멤버별 경로를 고정하고 파일명에는 UUID를 붙여 같은 이름 업로드 충돌을 피한다.
         String extension = "";
 
+        // 원본 확장자를 유지해 브라우저와 CDN이 파일 형식을 자연스럽게 처리하도록 한다.
         if (originalFilename != null && originalFilename.contains(".")) {
             extension = originalFilename.substring(originalFilename.lastIndexOf("."));
         }
